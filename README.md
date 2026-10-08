@@ -1,90 +1,98 @@
 # AppMail
 
 ## 1. Descripción
-**AppMail** es una biblioteca de clases ligera y sencilla desarrollada en Visual Basic .NET. Su propósito principal es facilitar el envío de correos electrónicos a través de un servidor SMTP. Proporciona una forma sencilla de encapsular la lógica de configuración de credenciales, puertos y conexión, exponiendo un único método para el envío mediante la clase `AppMail` y la estructura de configuración `dtSMTPMailServer`.
+**AppMail** es una biblioteca de clases (Class Library) sencilla y eficiente desarrollada en Visual Basic .NET. Su propósito principal es facilitar el envío de correos electrónicos mediante el protocolo SMTP. La biblioteca abstrae la complejidad de la configuración de credenciales y conexión, permitiendo a los desarrolladores enviar correos con un único método a través de la clase `AppMail` y su estructura de configuración `dtSMTPMailServer`.
 
 ## 2. Pila Tecnológica (Tech Stack)
+Al analizar el código fuente, la pila tecnológica identificada es:
 * **Lenguaje:** Visual Basic .NET (VB.NET)
 * **Framework:** .NET Framework 4.5.2
-* **Entorno de Desarrollo:** Visual Studio (formato de solución `.sln`)
-* **Dependencias y librerías principales:**
-  * `System.Net` (Para credenciales de red)
-  * `System.Net.Mail` (Para la creación y envío de correos, a través de `SmtpClient` y `MailMessage`)
+* **Entorno:** Microsoft Visual Studio (archivos `.sln` y `.vbproj`)
+* **Dependencias Principales:**
+  * `System.Net` (Para la gestión de credenciales de red mediante `NetworkCredential`).
+  * `System.Net.Mail` (Para la gestión del cliente y los mensajes mediante `SmtpClient` y `MailMessage`).
 
-## 3. Instrucciones de Instalación y Configuración
+## 3. Instrucciones de Instalación y Configuración Local
+Dado que el proyecto es una librería de clases, no se ejecuta por sí sola, sino que está pensada para ser consumida desde otras aplicaciones .NET (como WebForms, WinForms o aplicaciones de Consola).
 
-Al ser una biblioteca de clases (Class Library), su uso principal es ser integrada y referenciada dentro de otras aplicaciones .NET (como aplicaciones de consola, WinForms, WebForms, etc.).
-
-**Pasos para el entorno local:**
-
+### Paso a paso para instalación local:
 1. **Clonar el repositorio:**
+   Abre una terminal y ejecuta:
    ```bash
-   git clone <URL_DEL_REPOSITORIO>
+   git clone <url-del-repositorio>
    cd AppMail
    ```
 
-2. **Abrir la solución:**
-   * Abre el archivo `AppMail.sln` usando Microsoft Visual Studio (versión 2015 o superior es recomendada).
+2. **Abrir el proyecto:**
+   Abre el archivo `AppMail.sln` en tu IDE (recomendado: Microsoft Visual Studio 2015 o superior).
 
-3. **Construir (Build) el proyecto:**
-   * En Visual Studio, ve a **Compilar > Compilar solución** (o presiona `Ctrl + Shift + B`).
-   * Esto compilará el código y generará el archivo `AppMail.dll` en la ruta `AppMail/bin/Debug/` (o `Release/` si cambias la configuración).
+3. **Compilar el código:**
+   * En Visual Studio, ve al menú **Compilar** y selecciona **Compilar solución** (o presiona `Ctrl + Shift + B`).
+   * Como alternativa en la línea de comandos, si tienes MSBuild configurado en el PATH o desde la consola de desarrollador de Visual Studio:
+     ```bash
+     msbuild AppMail.sln /p:Configuration=Release
+     ```
+   * Tras la compilación, se generará el archivo `AppMail.dll` dentro del directorio `AppMail/bin/Debug/` (o `AppMail/bin/Release/`).
 
-4. **Variables y Configuración del Entorno:**
-   No se requieren variables de entorno a nivel de sistema. La configuración del servidor SMTP se realiza de forma programática utilizando la clase `dtSMTPMailServer` antes de intentar enviar el correo. Las credenciales (`Usuario` y `Password`) y parámetros como el `Host` y el `Puerto` son administrados dinámicamente en tiempo de ejecución.
+4. **Configuración del entorno (Variables y Dependencias):**
+   * **Variables de entorno:** La biblioteca no requiere variables de entorno del sistema (como un `.env`). Toda la configuración (host SMTP, usuario, contraseña, puerto) se inyecta programáticamente a través de las propiedades de la clase `dtSMTPMailServer` antes de enviar el correo.
+   * **Dependencias adicionales:** No requiere paquetes de NuGet externos, solo depende de las bibliotecas base (BCL) incluidas en .NET Framework 4.5.2.
 
-5. **Integración en otro proyecto:**
-   * Haz clic derecho en **Referencias** de tu proyecto principal en Visual Studio.
-   * Selecciona **Agregar referencia...** > **Examinar** y busca el archivo `AppMail.dll` generado.
-   * (Alternativa) También puedes copiar y agregar directamente el archivo `AppMail.vb` a tu proyecto para evitar dependencias de DLL externas.
+5. **Referenciar la librería en tu proyecto:**
+   En tu proyecto destino, da clic derecho en las Referencias, selecciona **Agregar referencia**, busca el archivo `AppMail.dll` recién compilado y agrégalo. O bien, puedes incluir el proyecto `AppMail.vbproj` en tu misma solución.
 
-## 4. Estructura de Carpetas
+## 4. Estructura Principal de Carpetas
+El repositorio tiene la siguiente estructura básica de archivos:
 
-* `/` (Raíz del Repositorio)
-  * `AppMail.sln`: Archivo principal de la solución de Visual Studio.
-  * `.gitignore` / `.gitattributes`: Archivos de configuración para el control de versiones con Git.
-* `AppMail/` (Carpeta del Proyecto)
-  * `AppMail.vb`: **Archivo principal del código fuente.** Contiene las clases `AppMail` y `dtSMTPMailServer`, donde reside toda la lógica de negocio para conectarse al SMTP y enviar el mensaje.
-  * `AppMail.vbproj`: Archivo del proyecto de Visual Studio (define el Target Framework y configuraciones de compilación).
-  * `My Project/`: Carpeta auto-generada por Visual Studio que contiene recursos, configuraciones globales de la aplicación e información de ensamblado (`AssemblyInfo.vb`).
+```text
+/
+├── .gitattributes      # Reglas para Git (fines de línea, etc.)
+├── .gitignore          # Archivos que Git debe ignorar (bin, obj, etc.)
+├── AppMail.sln         # Solución principal de Visual Studio
+├── README.md           # Este archivo de documentación
+└── AppMail/            # Directorio principal del código fuente
+    ├── AppMail.vbproj  # Definición del proyecto (configuraciones, frameworks)
+    ├── AppMail.vb      # Archivo fuente con la lógica principal (clases AppMail y dtSMTPMailServer)
+    └── My Project/     # Metadatos del ensamblado, configuraciones y recursos de Visual Studio
+```
 
-## 5. Guía Básica de Uso (Ejemplo)
+## 5. Guía Básica de Uso (Ejemplo Práctico)
 
-Para utilizar esta biblioteca, debes instanciar y poblar un objeto de configuración del servidor (`dtSMTPMailServer`), crear un objeto de correo nativo de .NET (`System.Net.Mail.MailMessage`), y luego usar el método `SmtpMail_send`.
-
-A continuación, un ejemplo de código básico integrando la biblioteca:
+A continuación, un ejemplo de cómo instanciar y usar las clases expuestas por la librería para enviar un correo electrónico.
 
 ```vbnet
 Imports System.Net.Mail
-' Asegúrate de importar el namespace del proyecto
+' Asegúrate de importar también el namespace si es diferente al proyecto raíz
 ' Imports AppMail
 
 Module Program
     Sub Main()
-        ' 1. Configurar los detalles del servidor SMTP
-        Dim servidorSmtp As New dtSMTPMailServer()
-        servidorSmtp.smtp_Host = "smtp.tudominio.com"
-        servidorSmtp.smtp_Port = "587" ' Usualmente 587 o 25 dependiendo del proveedor
-        servidorSmtp.smtp_User = "tu_correo@tudominio.com"
-        servidorSmtp.smtp_Password = "tu_password_seguro"
+        ' 1. Configurar los parámetros del servidor SMTP
+        Dim configSmtp As New dtSMTPMailServer()
+        configSmtp.smtp_Host = "smtp.tudominio.com" ' Ejemplo: smtp.gmail.com
+        configSmtp.smtp_Port = "587" ' El puerto que requiera el proveedor (25, 465, 587...)
+        configSmtp.smtp_User = "tu_correo@tudominio.com"
+        configSmtp.smtp_Password = "tu_password_seguro"
 
-        ' 2. Crear el mensaje
+        ' 2. Armar el mensaje de correo
         Dim mensaje As New MailMessage()
         mensaje.From = New MailAddress("tu_correo@tudominio.com")
         mensaje.To.Add("destinatario@ejemplo.com")
-        mensaje.Subject = "Prueba de la biblioteca AppMail"
-        mensaje.Body = "Este es un correo automático generado con la librería de pruebas."
-        ' mensaje.IsBodyHtml = True ' Opcional: si el cuerpo es HTML
+        mensaje.Subject = "Prueba de envío usando AppMail"
+        mensaje.Body = "Este es un correo de prueba enviado exitosamente usando la librería AppMail."
 
-        ' 3. Instanciar y enviar
-        Dim enviador As New AppMail()
-        Dim fueExitoso As Boolean = enviador.SmtpMail_send(servidorSmtp, mensaje)
+        ' Si deseas enviar el cuerpo en formato HTML descomenta la siguiente línea:
+        ' mensaje.IsBodyHtml = True
 
-        ' 4. Verificar resultado
-        If fueExitoso Then
+        ' 3. Instanciar la clase principal y enviar
+        Dim enviadorMail As New AppMail()
+        Dim envioExitoso As Boolean = enviadorMail.SmtpMail_send(configSmtp, mensaje)
+
+        ' 4. Validar el resultado
+        If envioExitoso Then
             Console.WriteLine("El correo se envió correctamente.")
         Else
-            Console.WriteLine("Ocurrió un error al enviar el correo. Verifica las credenciales o el host.")
+            Console.WriteLine("Hubo un fallo al enviar el correo. Verifica los datos de configuración.")
         End If
 
         Console.ReadLine()
